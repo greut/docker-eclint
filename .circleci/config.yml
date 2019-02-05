@@ -1,0 +1,23 @@
+---
+version: 2
+jobs:
+  eclint:
+    working_directory: ~/docker-eclint/
+    docker:
+      - image: qima/eclint:2.8.1-61c304e
+    steps:
+      - checkout
+      - run:
+          name: Validate Editor Config rules
+          command: |
+            eclint check
+      # - run:
+      #     command: |  # Init and test TF plan
+      #       terraform init
+      #       terraform plan
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - eclint
