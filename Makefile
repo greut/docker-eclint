@@ -90,3 +90,6 @@ print-circleci-latest:
 
 print-img-name:
 	@echo ${NAME}
+
+print-img-safe-name:
+	@echo ${NAME} | tr "/" "-"
