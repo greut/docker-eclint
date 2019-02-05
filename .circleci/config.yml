@@ -24,11 +24,13 @@ jobs:
       - run:
           name: build-exec
           command: |
+            set -x
             docker version
             make build
       - run:
           name: build-circleci
           command: |
+            set -x
             docker version
             make build-circleci
 
