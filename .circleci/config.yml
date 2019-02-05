@@ -16,7 +16,7 @@ jobs:
             eclint check $(git ls-files)
   docker-build:
     docker:
-      - image: circleci/golang:1.11.5-stretch-node-browsers-legacy
+      - image: circleci/classic:201808-01
     steps:
       - checkout
       - setup_remote_docker:
