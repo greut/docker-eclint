@@ -1,17 +1,26 @@
 FROM node:11.9.0-stretch
 
-LABEL org.label-schema.schema-version = "1.0"
-LABEL org.label-schema.name = "eclint"
-LABEL org.label-schema.description = "eclint packaged as a docker image"
-LABEL org.label-schema.vcs-url = "https://github.com/asiainspection/docker-eclint"
-LABEL org.label-schema.vendor = "Qima (formerly Asia Inspection)"
+ARG CI_PLATFORM
+LABEL com.qima.ci-platform ${CI_PLATFORM}
+LABEL org.label-schema.schema-version "1.0"
+LABEL org.label-schema.name "eclint"
+LABEL org.label-schema.description "eclint packaged as a docker image"
+LABEL org.label-schema.vcs-url "https://github.com/asiainspection/docker-eclint"
+LABEL org.label-schema.vendor "Qima (formerly Asia Inspection)"
 LABEL org.label-schema.url="https://github.com/jedmao/eclint"
-LABEL org.label-schema.version = "2.8.1-01 (node/11.9.0)"
-LABEL org.label-schema.docker.cmd.help = "docker run --rm -v $(pwd):/app/code qima/eclint help"
-LABEL org.label-schema.docker.cmd = "docker run --rm -v $(pwd):/app/code qima/eclint check"
+LABEL org.label-schema.docker.cmd.help "docker run --rm -v $(pwd):/app/code qima/eclint:TAG help"
+LABEL org.label-schema.docker.cmd "docker run --rm -v $(pwd):/app/code qima/eclint:TAG check"
 
 WORKDIR /app/code
 ARG ECLINT_VERSION
+LABEL com.qima.version "${ECLINT_VERSION} (node/11.9.0)"
 RUN npm i -g eclint@${ECLINT_VERSION}
 
 ENTRYPOINT ["eclint"]
+
+ARG GIT_SHA1
+ARG GIT_BRANCH
+ARG CI_BUILD_NUMBER
+LABEL org.label-schema.vcs-ref ${GIT_SHA1}
+LABEL com.qima.git-branch ${GIT_BRANCH}
+LABEL com.qima.ci-build-number ${CI_BUILD_NUMBER}

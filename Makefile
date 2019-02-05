@@ -1,21 +1,42 @@
 NAME := qima/eclint
+CI_PLATFORM := circleci
 GIT_SHA1 := $(shell git rev-parse --short HEAD)
+GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 GIT_DIRTY := $(shell git diff --quiet || echo '-dirty')
+GIT_SHA1_DIRTY_MAYBE := ${GIT_SHA1}${GIT_DIRTY}
 ECLINT_VERSION := $(shell cat eclint.version)
-TAG := ${ECLINT_VERSION}-${GIT_SHA1}${GIT_DIRTY}
-TAG_CIRCLECI := circleci-${ECLINT_VERSION}-${GIT_SHA1}${GIT_DIRTY}
+TAG := ${ECLINT_VERSION}-${GIT_SHA1_DIRTY_MAYBE}
+TAG_CIRCLECI := circleci-${ECLINT_VERSION}-${GIT_SHA1_DIRTY_MAYBE}
 IMG := ${NAME}:${TAG}
 IMG_CIRCLECI := ${NAME}:${TAG_CIRCLECI}
 LATEST := ${NAME}:latest
 LATEST_CIRCLECI := ${NAME}:circleci-latest
 
+ifdef CIRCLE_BUILD_NUM
+	CI_BUILD_NUMBER := "${CIRCLE_BUILD_NUM}"
+else
+	CI_BUILD_NUMBER := "N/A"
+endif
+
 build:
-	@docker image build --build-arg ECLINT_VERSION=${ECLINT_VERSION} -t ${IMG} -f exec.Dockerfile .
-	@docker image tag ${IMG} ${LATEST}
+	docker image build \
+		--build-arg CI_PLATFORM=${CI_PLATFORM} \
+		--build-arg ECLINT_VERSION=${ECLINT_VERSION} \
+		--build-arg GIT_SHA1=${GIT_SHA1_DIRTY_MAYBE} \
+		--build-arg GIT_BRANCH=${GIT_BRANCH} \
+		--build-arg CI_BUILD_NUMBER=${CI_BUILD_NUMBER} \
+		-t ${IMG} -f exec.Dockerfile .
+	docker image tag ${IMG} ${LATEST}
 
 build-circleci:
-	@docker image build --build-arg ECLINT_VERSION=${ECLINT_VERSION} -t ${IMG_CIRCLECI} -f circleci.Dockerfile .
-	@docker image tag ${IMG_CIRCLECI} ${LATEST_CIRCLECI}
+	docker image build \
+		--build-arg CI_PLATFORM=${CI_PLATFORM} \
+		--build-arg ECLINT_VERSION=${ECLINT_VERSION} \
+		--build-arg GIT_SHA1=${GIT_SHA1_DIRTY_MAYBE} \
+		--build-arg GIT_BRANCH=${GIT_BRANCH} \
+		--build-arg CI_BUILD_NUMBER=${CI_BUILD_NUMBER} \
+		-t ${IMG_CIRCLECI} -f circleci.Dockerfile .
+	docker image tag ${IMG_CIRCLECI} ${LATEST_CIRCLECI}
 
 push:
 	@echo "Tag ${TAG}"
