@@ -36,4 +36,6 @@ workflows:
   workflow:
     jobs:
     - eclint
-    - docker-build
+    - docker-build:
+        requires:
+            - eclint
