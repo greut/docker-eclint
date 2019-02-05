@@ -6,11 +6,13 @@ GIT_DIRTY := $(shell git diff --quiet || echo '-dirty')
 GIT_SHA1_DIRTY_MAYBE := ${GIT_SHA1}${GIT_DIRTY}
 ECLINT_VERSION := $(shell cat eclint.version)
 TAG := ${ECLINT_VERSION}-${GIT_SHA1_DIRTY_MAYBE}
+TAG_LATEST := "latest"
 TAG_CIRCLECI := circleci-${ECLINT_VERSION}-${GIT_SHA1_DIRTY_MAYBE}
+TAG_CIRCLECI_LATEST := "circleci-latest"
 IMG := ${NAME}:${TAG}
 IMG_CIRCLECI := ${NAME}:${TAG_CIRCLECI}
-LATEST := ${NAME}:latest
-LATEST_CIRCLECI := ${NAME}:circleci-latest
+IMG_LATEST := ${NAME}:${TAG_LATEST}
+IMG_LATEST_CIRCLECI := ${NAME}:${TAG_CIRCLECI_LATEST}
 
 ifdef CIRCLE_BUILD_NUM
 	CI_BUILD_NUMBER := "${CIRCLE_BUILD_NUM}"
@@ -26,7 +28,7 @@ build:
 		--build-arg GIT_BRANCH=${GIT_BRANCH} \
 		--build-arg CI_BUILD_NUMBER=${CI_BUILD_NUMBER} \
 		-t ${IMG} -f exec.Dockerfile .
-	docker image tag ${IMG} ${LATEST}
+	docker image tag ${IMG} ${IMG_LATEST}
 
 build-circleci:
 	docker image build \
@@ -36,7 +38,7 @@ build-circleci:
 		--build-arg GIT_BRANCH=${GIT_BRANCH} \
 		--build-arg CI_BUILD_NUMBER=${CI_BUILD_NUMBER} \
 		-t ${IMG_CIRCLECI} -f circleci.Dockerfile .
-	docker image tag ${IMG_CIRCLECI} ${LATEST_CIRCLECI}
+	docker image tag ${IMG_CIRCLECI} ${IMG_LATEST_CIRCLECI}
 
 push:
 	@echo "Tag ${TAG}"
@@ -73,3 +75,18 @@ else
 	@echo "Let's push ${LATEST_CIRCLECI} (please check that you are logged in)"
 	@docker image push ${LATEST_CIRCLECI}
 endif
+
+print-exec-version:
+	@echo ${TAG}
+
+print-circleci-version:
+	@echo ${TAG_CIRCLECI}
+
+print-exec-latest:
+	@echo ${TAG_LATEST}
+
+print-circleci-latest:
+	@echo ${TAG_CIRCLECI_LATEST}
+
+print-img-name:
+	@echo ${NAME}
