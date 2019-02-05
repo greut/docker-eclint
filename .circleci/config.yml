@@ -10,8 +10,10 @@ jobs:
       - run:
           name: Validate Editor Config rules
           command: |
+            set -x
             ls -l
-            eclint check
+            git ls-files
+            eclint check $(git ls-files)
   docker-build:
     docker:
       - image: circleci/golang:1.11.5-stretch-node-browsers-legacy
