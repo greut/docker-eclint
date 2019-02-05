@@ -29,7 +29,8 @@ jobs:
             make build
             mkdir -p workspace
             echo "Save exec docker image for potential further push"
-            docker image save $(make print-img-name):$(make print-exec-version) -o workspace/$(make print-img-name)-$(make print-exec-version)
+            docker image save $(make print-img-name):$(make print-exec-version) \
+              -o workspace/$(make print-img-name)-$(make print-exec-version)
       - run:
           name: build-circleci
           command: |
@@ -37,7 +38,8 @@ jobs:
             docker version
             make build-circleci
             echo "Save circleci docker image for potential further push"
-            docker image save $(make print-img-name):$(make print-circleci-version) -o workspace/$(make print-img-name)-$(make print-circleci-version)
+            docker image save $(make print-img-name):$(make print-circleci-version) \
+              -o workspace/$(make print-img-name)-$(make print-circleci-version)
 
 
 workflows:
