@@ -6,7 +6,7 @@ jobs:
   eclint:
     working_directory: ~/docker-eclint/
     docker:
-      - image: qima/eclint:circleci-2.8.1-f83022d
+      - image: qima/eclint:circleci-2.8.1-440a5cb
     steps:
       - checkout
       - run:
