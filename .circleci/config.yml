@@ -24,12 +24,16 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
+          name: Create workspace directory
+          command: |
+            mkdir -p workspace
+            echo "$CIRCLE_BRANCH" > workspace/circle_branch.txt
+      - run:
           name: Build Exec Image
           command: |
             set -x
             docker version
             make build
-            mkdir -p workspace
             if [ "$CIRCLE_BRANCH" == "master" ]; then
               echo "Save exec docker image for potential further push"
               docker image save $(make print-img-name):$(make print-exec-version) \
