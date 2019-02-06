@@ -30,22 +30,30 @@ jobs:
             docker version
             make build
             mkdir -p workspace
-            echo "Save exec docker image for potential further push"
-            docker image save $(make print-img-name):$(make print-exec-version) \
-              -o workspace/$(make print-img-safe-name)--$(make print-exec-version)
-            docker image save $(make print-img-name):$(make print-exec-latest) \
-              -o workspace/$(make print-img-safe-name)--$(make print-exec-latest)
+            if [ "$CIRCLE_BRANCH" == "master" ]; then
+              echo "Save exec docker image for potential further push"
+              docker image save $(make print-img-name):$(make print-exec-version) \
+                -o workspace/$(make print-img-safe-name)--$(make print-exec-version)
+              docker image save $(make print-img-name):$(make print-exec-latest) \
+                -o workspace/$(make print-img-safe-name)--$(make print-exec-latest)
+            else
+              echo "Not saving image to workspace as we are not on 'master'"
+            fi
       - run:
           name: Build CircleCI compatible image
           command: |
             set -x
             docker version
             make build-circleci
-            echo "Save circleci docker image for potential further push"
-            docker image save $(make print-img-name):$(make print-circleci-version) \
-              -o workspace/$(make print-img-safe-name)--$(make print-circleci-version)
-            docker image save $(make print-img-name):$(make print-circleci-latest) \
-              -o workspace/$(make print-img-safe-name)--$(make print-circleci-latest)
+            if [ "$CIRCLE_BRANCH" == "master" ]; then
+              echo "Save circleci docker image for potential further push"
+              docker image save $(make print-img-name):$(make print-circleci-version) \
+                -o workspace/$(make print-img-safe-name)--$(make print-circleci-version)
+              docker image save $(make print-img-name):$(make print-circleci-latest) \
+                -o workspace/$(make print-img-safe-name)--$(make print-circleci-latest)
+            else
+              echo "Not saving image to workspace as we are not on 'master'"
+            fi
       - persist_to_workspace:
           root: workspace
           paths:
