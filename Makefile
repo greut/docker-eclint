@@ -54,8 +54,8 @@ push-latest:
 ifdef GIT_DIRTY
 	@echo "Cannot push a dirty image"
 else
-	@echo "Let's push ${LATEST} (please check that you are logged in)"
-	@docker image push ${LATEST}
+	@echo "Let's push ${IMG_LATEST} (please check that you are logged in)"
+	@docker image push ${IMG_LATEST}
 endif
 
 push-circleci:
@@ -72,8 +72,8 @@ push-circleci-latest:
 ifdef GIT_DIRTY
 	@echo "Cannot push a dirty image"
 else
-	@echo "Let's push ${LATEST_CIRCLECI} (please check that you are logged in)"
-	@docker image push ${LATEST_CIRCLECI}
+	@echo "Let's push ${IMG_LATEST_CIRCLECI} (please check that you are logged in)"
+	@docker image push ${IMG_LATEST_CIRCLECI}
 endif
 
 print-exec-version:
