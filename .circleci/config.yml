@@ -24,7 +24,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: build-exec
+          name: Build Exec Image
           command: |
             set -x
             docker version
@@ -36,7 +36,7 @@ jobs:
             docker image save $(make print-img-name):$(make print-exec-latest) \
               -o workspace/$(make print-img-safe-name)--$(make print-exec-latest)
       - run:
-          name: build-circleci
+          name: Build CircleCI compatible image
           command: |
             set -x
             docker version
@@ -61,7 +61,7 @@ jobs:
           at: /tmp/workspace
       - docker-publish/check
       - run:
-          name: push-exec
+          name: Push Exec Image
           command: |
             set -x
             echo "Loading images from workspace"
@@ -81,7 +81,7 @@ jobs:
           at: /tmp/workspace
       - docker-publish/check
       - run:
-          name: push-circleci
+          name: Push CircleCI compatible image
           command: |
             set -x
             echo "Loading images from workspace"
@@ -106,7 +106,6 @@ workflows:
           branches:
             only:
               - master
-              - provide_makefile
     - docker-push-circleci:
         requires:
           - docker-push-exec
@@ -114,4 +113,3 @@ workflows:
           branches:
             only:
               - master
-              - provide_makefile
