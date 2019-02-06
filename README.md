@@ -27,4 +27,3 @@ If you want to use this image with [CircleCI](https://circleci.com/) you can use
 Inspired by [odannyc/eclint](https://hub.docker.com/r/odannyc/eclint) and [github.com/odannyc/docker-eclint](https://github.com/odannyc/docker-eclint)
 
 Node and eclint versions are fixed (i.e no `latest`)
-
