@@ -2,7 +2,7 @@
 
 ## What?
 
-This is a repository to maintain the Dockerfile for image [qima/eclint](https://cloud.docker.com/u/qima/repository/docker/qima/eclint),
+This is a repository to maintain the Dockerfile for image [qima/eclint](https://hub.docker.com/r/qima/eclint),
 A Docker Image to run [editorconfig](http://editorconfig.org/) checks using [eclint](https://github.com/jedmao/eclint)
 
 ## Usage
